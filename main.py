@@ -1,8 +1,7 @@
-from cgitb import text
 from tkinter import *
-from tkinter import font, ttk
+from tkinter import ttk
 import datetime
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import DateEntry
 from view import *
 from tkinter import messagebox
 
@@ -39,10 +38,14 @@ frame_direita = Frame(janela, width=588, height=403, bg=co1, relief='flat')
 frame_direita.grid(row=0, column=1, rowspan=2, padx=1, pady=0, sticky=NSEW)
 
 ################# Label cima ###############
-app_nome = Label(frame_cima, text='Cadastro de Clientes', anchor=NW, font=('Ivy 13 bold'), bg=co2, fg=co1, relief='flat')
+app_nome = Label(frame_cima, text='Cadastro de Clientes', anchor=NW, font=('Ivy 13 bold'), bg=co2, fg=co1,
+                 relief='flat')
 app_nome.place(x=65, y=15)
 
-#funcao inserir
+global tree
+
+
+# Função inserir
 def inserir():
     nome = e_nome.get()
     email = e_email.get()
@@ -65,67 +68,161 @@ def inserir():
         e_cal.delete(0, 'end')
         e_estado.delete(0, 'end')
         e_sobre.delete(0, 'end')
+
     for widget in frame_direita.winfo_children():
         widget.destroy()
 
     mostrar()
 
+
+# Função atualizar
+def atualizar():
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        tre_lista = treev_dicionario['values']
+
+        valor_id = tre_lista[0]
+
+        e_nome.delete(0, 'end')
+        e_email.delete(0, 'end')
+        e_tel.delete(0, 'end')
+        e_cal.delete(0, 'end')
+        e_estado.delete(0, 'end')
+        e_sobre.delete(0, 'end')
+
+        e_nome.insert(0, tre_lista[1])
+        e_email.insert(0, tre_lista[2])
+        e_tel.insert(0, tre_lista[3])
+        e_cal.insert(0, tre_lista[4])
+        e_estado.insert(0, tre_lista[5])
+        e_sobre.insert(0, tre_lista[6])
+
+        # Função Atualizar
+        def update():
+            nome = e_nome.get()
+            email = e_email.get()
+            telefone = e_tel.get()
+            dia = e_cal.get()
+            estado = e_estado.get()
+            sobre = e_sobre.get()
+
+            lista = [nome, email, telefone, dia, estado, sobre, valor_id]
+
+            if not nome:
+                messagebox.showerror('Erro', 'O nome não pode ser vazio')
+            else:
+                atualizar_info(lista)
+                messagebox.showinfo('Sucesso', 'Os dados foram atualizados com sucesso')
+
+                e_nome.delete(0, 'end')
+                e_email.delete(0, 'end')
+                e_tel.delete(0, 'end')
+                e_cal.delete(0, 'end')
+                e_estado.delete(0, 'end')
+                e_sobre.delete(0, 'end')
+
+            for widget in frame_direita.winfo_children():
+                widget.destroy()
+
+            mostrar()
+
+        # Botão Confirmar
+        b_confirmar = Button(frame_baixo, command=update, text='Confirmar', width='11', font=('Ivy 7 bold'), bg=co2,
+                             fg=co1, relief='raised', overrelief='ridge')
+        b_confirmar.place(x=112, y=370)
+
+
+
+    except IndexError:
+        messagebox.showerror('Erro', 'Selecione um dos dados na tabela')
+
+
+# Função deletar
+def deletar():
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        tre_lista = treev_dicionario['values']
+
+        valor_id = [tre_lista[0]]
+
+        deletar_info(valor_id)
+        messagebox.showinfo('Sucesso', 'Os dados foram deletados com sucesso')
+
+        for widget in frame_direita.winfo_children():
+            widget.destroy()
+
+        mostrar()
+
+    except IndexError:
+        messagebox.showerror('Erro', 'Selecione um dos dados na tabela')
+
+
 ################# Configurando frame baixo ###############
 
-#Nome
+# Nome
 l_nome = Label(frame_baixo, text='Nome *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
 l_nome.place(x=10, y=10)
 e_nome = Entry(frame_baixo, width=45, justify='left', relief='solid')
 e_nome.place(x=15, y=40)
 
-#Email
+# Email
 l_email = Label(frame_baixo, text='E-Mail *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
 l_email.place(x=10, y=70)
 e_email = Entry(frame_baixo, width=45, justify='left', relief='solid')
 e_email.place(x=15, y=100)
 
-#Telefone
+# Telefone
 l_tel = Label(frame_baixo, text='Telefone *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
 l_tel.place(x=10, y=130)
 e_tel = Entry(frame_baixo, width=45, justify='left', relief='solid')
 e_tel.place(x=15, y=160)
 
-#Data de entrega
+# Data de entrega
 l_cal = Label(frame_baixo, text='Data da entrega *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
 l_cal.place(x=10, y=190)
 e_cal = DateEntry(frame_baixo, width=12, background='darkblue', foreground='white', borderwidth='2', year=ano_atual)
 e_cal.place(x=15, y=220)
 
-#Estado da entrega
-l_estado = Label(frame_baixo, text='Estado da entrega *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
+# Estado da entrega
+l_estado = Label(frame_baixo, text='Estado da entrega *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4,
+                 relief='flat')
 l_estado.place(x=160, y=190)
 e_estado = Entry(frame_baixo, width=20, justify='left', relief='solid')
 e_estado.place(x=160, y=220)
 
-#Sobre
-l_sobre = Label(frame_baixo, text='Informações adicionais*', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4, relief='flat')
+# Sobre
+l_sobre = Label(frame_baixo, text='Informações adicionais*', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4,
+                relief='flat')
 l_sobre.place(x=15, y=260)
 e_sobre = Entry(frame_baixo, width=45, justify='left', relief='solid')
 e_sobre.place(x=15, y=290)
 
-#Botão inserir
-b_inserir = Button(frame_baixo, command=inserir, text='Inserir', width='10', font=('Ivy 9 bold'), bg=co6, fg=co1, relief='raised', overrelief='ridge')
+# Botão inserir
+b_inserir = Button(frame_baixo, command=inserir, text='Inserir', width='10', font=('Ivy 9 bold'), bg=co6, fg=co1,
+                   relief='raised', overrelief='ridge')
 b_inserir.place(x=15, y=340)
 
-#Botão atualizar
-b_atualizar = Button(frame_baixo, text='Atualizar', width='10', font=('Ivy 9 bold'), bg=co2, fg=co1, relief='raised', overrelief='ridge')
+# Botão atualizar
+b_atualizar = Button(frame_baixo, command=atualizar, text='Atualizar', width='10', font=('Ivy 9 bold'), bg=co2, fg=co1,
+                     relief='raised', overrelief='ridge')
 b_atualizar.place(x=110, y=340)
 
-#Botão Deletar
-b_deletar = Button(frame_baixo, text='Deletar', width='10', font=('Ivy 9 bold'), bg=co7, fg=co1, relief='raised', overrelief='ridge')
+# Botão Deletar
+b_deletar = Button(frame_baixo, command=deletar, text='Deletar', width='10', font=('Ivy 9 bold'), bg=co7, fg=co1, relief='raised',
+                   overrelief='ridge')
 b_deletar.place(x=205, y=340)
 
-#Tabela # Frame direita #
+
+# Tabela # Frame direita #
 def mostrar():
+    global tree
+
     lista = mostrar_info()
 
     # lista para cabecario
-    tabela_head = ['ID', 'Nome', 'email', 'telefone', 'Data', 'Estado', 'Sobre']
+    tabela_head = ['Id', 'Nome', 'E-mail', 'Telefone', 'Data', 'Estado', 'Informações']
 
     # criando a tabela
     tree = ttk.Treeview(frame_direita, selectmode="extended", columns=tabela_head, show="headings")
@@ -142,7 +239,7 @@ def mostrar():
 
     frame_direita.grid_rowconfigure(0, weight=12)
 
-    hd = ["nw", "nw", "nw", "nw", "nw", "center", "center"]
+    hd = ["nw", "nw", "nw", "nw", "center", "center", "center"]
     h = [30, 170, 140, 100, 120, 50, 100]
     n = 0
 
@@ -156,8 +253,8 @@ def mostrar():
     for item in lista:
         tree.insert('', 'end', values=item)
 
-#Chamando a função mostrar
+
+# Chamando a função mostrar
 mostrar()
 
 janela.mainloop()
-
