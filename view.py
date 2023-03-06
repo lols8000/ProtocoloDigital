@@ -5,6 +5,14 @@ import sqlite3 as lite
 con = lite.connect('dados.db')
 
 
+# Função para verificar se o usuário e a senha estão corretos
+def verify_user(username, password):
+    cur = con.cursor()
+    query = "SELECT * FROM formulario WHERE nome = ? AND telefone = ?"
+    cur.execute(query, (username, password))
+    return cur.fetchone() is not None
+
+
 # Inserindo informações
 def inserir_info(i):
     with con:
