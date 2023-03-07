@@ -183,11 +183,13 @@ def cadastrarUsuario():
     e_cal = DateEntry(frame_baixo, width=12, background='darkblue', foreground='white', borderwidth='2', year=ano_atual)
     e_cal.place(x=15, y=220)
 
-    # Estado da entrega
-    l_estado = Label(frame_baixo, text='Estado da entrega *', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4,
+    # Estado do usuário
+    lista = ['Ativo', 'Desativado']
+    l_estado = Label(frame_baixo, text='Estado do usuário', anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4,
                      relief='flat')
     l_estado.place(x=160, y=190)
-    e_estado = Entry(frame_baixo, width=20, justify='left', relief='solid')
+    e_estado = ttk.Combobox(frame_baixo, values=lista, width=18)
+    e_estado.set('Ativo')
     e_estado.place(x=160, y=220)
 
     # Sobre
@@ -255,3 +257,5 @@ def cadastrarUsuario():
     # Chamando a função mostrar
     mostrar()
     janela.mainloop()
+
+#cadastrarUsuario()
