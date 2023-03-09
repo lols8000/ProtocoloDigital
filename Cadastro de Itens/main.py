@@ -16,8 +16,9 @@ co4 = "#403d3d"  # letra
 co5 = "#e06636"  # - profit
 co6 = "#038cfc"  # azul
 co7 = "#ef5350"  # vermelha
-co8 = "#263238"  # + verde
+co8 = "#40E0D0"  # + verde
 co9 = "#e9edf5"  # sky blue
+co10 = "#00A8FF"  # Azul Royal
 
 # Criando Janela
 janela = Tk()
@@ -145,8 +146,7 @@ app_del = app_del.resize((20, 20))
 app_del = ImageTk.PhotoImage(app_del)
 
 # Criando Button Excluir
-b_del = Button(frameMeio, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW,
-               overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
+b_del = Button(frameMeio, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW, overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_del.place(x=330, y=80)
 
 # Carregando imagem botão Ver item
@@ -158,5 +158,63 @@ app_see = ImageTk.PhotoImage(app_see)
 b_see = Button(frameMeio, image=app_see, width=95, text='  Ver item'.upper(), compound=LEFT, anchor=NW,
                overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_see.place(x=330, y=218)
+
+# Label quantidade total de valores
+l_total = Label(frameMeio, text='', width=14, height=2, anchor=CENTER, font=('Ivy 17 bold'), bg=co10, fg=co1)
+l_total.place(x=450, y=17)
+l_total_ = Label(frameMeio, text='  Valor total de todos os itens   ', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co10, fg=co1)
+l_total_.place(x=450, y=12)
+
+# Label quantidade total de itens
+l_qtd = Label(frameMeio, text='', width=14, height=2, pady=5, anchor=CENTER, font=('Ivy 17 bold'), bg=co10, fg=co1)
+l_qtd.place(x=450, y=90)
+l_qtd_ = Label(frameMeio, text='  Quantidade total de itens  ', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co10, fg=co1)
+l_qtd_.place(x=450, y=92)
+
+# Criando tabela frame baixo
+tabela_head = ['#Item', 'Nome', 'Sala/Área', 'Descrição', 'Marca/Modelo', 'Data da compra', 'Valor da compra', 'Número de série']
+
+lista_itens = []
+
+global tree
+
+tree = ttk.Treeview(frameBaixo, selectmode="extended", columns=tabela_head, show="headings")
+
+# vertical scrollbar
+vsb = ttk.Scrollbar(frameBaixo, orient="vertical", command=tree.yview)
+
+# horizontal scrollbar
+hsb = ttk.Scrollbar(frameBaixo, orient="horizontal", command=tree.xview)
+
+tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+tree.grid(column=0, row=0, sticky='nsew')
+vsb.grid(column=1, row=0, sticky='ns')
+hsb.grid(column=0, row=1, sticky='ew')
+frameBaixo.grid_rowconfigure(0, weight=12)
+
+hd = ["center", "center", "center", "center", "center", "center", "center", 'center']
+h = [40, 150, 100, 160, 130, 100, 100, 100]
+n = 0
+
+for col in tabela_head:
+    tree.heading(col, text=col.title(), anchor=CENTER)
+    # adjust the column's width to the header string
+    tree.column(col, width=h[n], anchor=hd[n])
+    n += 1
+
+# inserindo os itens dentro da tabela
+for item in lista_itens:
+    tree.insert('', 'end', values=item)
+
+quantidade = [8888, 88]
+
+for iten in lista_itens:
+    quantidade.append(iten[6])
+
+Total_valor = sum(quantidade)
+Total_itens = len(quantidade)
+
+l_total['text'] = 'R$ {:,.2f}'.format(Total_valor)
+l_qtd['text'] = Total_itens
 
 janela.mainloop()
