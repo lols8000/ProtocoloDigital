@@ -146,7 +146,8 @@ app_del = app_del.resize((20, 20))
 app_del = ImageTk.PhotoImage(app_del)
 
 # Criando Button Excluir
-b_del = Button(frameMeio, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW, overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
+b_del = Button(frameMeio, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW, overrelief=RIDGE,
+               font=('Ivy 8'), bg=co1, fg=co0)
 b_del.place(x=330, y=80)
 
 # Carregando imagem botão Ver item
@@ -162,17 +163,39 @@ b_see.place(x=330, y=218)
 # Label quantidade total de valores
 l_total = Label(frameMeio, text='', width=14, height=2, anchor=CENTER, font=('Ivy 17 bold'), bg=co10, fg=co1)
 l_total.place(x=450, y=17)
-l_total_ = Label(frameMeio, text='  Valor total de todos os itens   ', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co10, fg=co1)
+l_total_ = Label(frameMeio, text='  Valor total de todos os itens   ', height=1, anchor=NW, font=('Ivy 10 bold'),
+                 bg=co10, fg=co1)
 l_total_.place(x=450, y=12)
 
 # Label quantidade total de itens
 l_qtd = Label(frameMeio, text='', width=14, height=2, pady=5, anchor=CENTER, font=('Ivy 17 bold'), bg=co10, fg=co1)
 l_qtd.place(x=450, y=90)
-l_qtd_ = Label(frameMeio, text='  Quantidade total de itens  ', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co10, fg=co1)
+l_qtd_ = Label(frameMeio, text='  Quantidade total de itens  ', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co10,
+               fg=co1)
 l_qtd_.place(x=450, y=92)
 
+# Carregando imagem botão Atualizar
+app_qr_code = Image.open('qrCode.png')
+app_qr_code = app_qr_code.resize((100, 100))
+app_qr_code = ImageTk.PhotoImage(app_qr_code)
+
+# Label QR Code itens
+app_logo = Label(frameMeio, image=app_qr_code, width=100, relief=RAISED, anchor=NW, bg=co1, fg=co4)
+app_logo.place(x=450, y=165)
+
+# Carregando QR code
+app_imprimir = Image.open('icons8-send-to-printer-16.png')
+app_imprimir = app_imprimir.resize((20, 20))
+app_imprimir = ImageTk.PhotoImage(app_imprimir)
+
+# Criando Button imprimir
+b_see = Button(frameMeio, image=app_imprimir, width=85, text='  Imprimir'.upper(), compound=LEFT, anchor=NW,
+               overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
+b_see.place(x=560, y=165)
+
 # Criando tabela frame baixo
-tabela_head = ['#Item', 'Nome', 'Sala/Área', 'Descrição', 'Marca/Modelo', 'Data da compra', 'Valor da compra', 'Número de série']
+tabela_head = ['#Item', 'Nome', 'Sala/Área', 'Descrição', 'Marca/Modelo', 'Data da compra', 'Valor da compra',
+               'Número de série']
 
 lista_itens = []
 
