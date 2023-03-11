@@ -66,23 +66,20 @@ def inserir():
     lista_inserir = [nome, local, descricao, modelo, data, valor, serie, imagem]
 
     for i in lista_inserir:
-        if lista_inserir:
-            inserir_form(lista_inserir)
-            messagebox.showerror('Sucesso', 'Os dados foram inseridos com sucesso')
-        else:
+        if i == '':
             messagebox.showerror('Erro', 'Preencha todos os campos')
             return
 
-    nome.delete(0, 'end')
-    local.delete(0, 'end')
-    descricao.delete(0, 'end')
-    modelo.delete(0, 'end')
-    data.delete(0, 'end')
-    valor.delete(0, 'end')
-    serie.delete(0, 'end')
+    inserir_form(lista_inserir)
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
 
-    for widget in frameMeio.winfo_children():
-        widget.destroy()
+    e_nome.delete(0, 'end')
+    e_local.delete(0, 'end')
+    e_descricao.delete(0, 'end')
+    e_modelo.delete(0, 'end')
+    e_cal.delete(0, 'end')
+    e_valor.delete(0, 'end')
+    e_serial.delete(0, 'end')
 
     mostrar()
 
@@ -93,13 +90,39 @@ def escolher_imagem():
     imagem = fd.askopenfilename()
     imagem_string = imagem
 
-    # Carregando imagem cabeçalho
+    # Carregando imagem item
     imagem = Image.open(imagem)
     imagem = imagem.resize((170, 170))
     imagem = ImageTk.PhotoImage(imagem)
 
     l_imagem = Label(frameMeio, image=imagem)
     l_imagem.place(x=700, y=10)
+
+#Função ver item
+def ver_imagem():
+    global imagem, imagem_string, l_imagem
+
+    treev_dados = tree.focus()
+    treev_dicionario = tree.item(treev_dados)
+
+    treev_lista = treev_dicionario['values']
+
+    valor = [int(treev_lista[0])]
+
+    item = ver_item(valor)
+
+    imagem = item[0][8]
+
+    # Carregando imagem ver item
+    imagem = Image.open(imagem)
+    imagem = imagem.resize((170, 170))
+    imagem = ImageTk.PhotoImage(imagem)
+
+    l_imagem = Label(frameMeio, image=imagem)
+    l_imagem.place(x=700, y=10)
+
+
+
 
 
 # Trabalhando no frame cima
@@ -183,7 +206,8 @@ app_add = app_add.resize((20, 20))
 app_add = ImageTk.PhotoImage(app_add)
 
 # Criando Button Inserir
-b_inserir = Button(frameMeio, image=app_add, width=95, text='  Adicionar'.upper(), compound=LEFT, anchor=NW,
+b_inserir = Button(frameMeio, command=inserir, image=app_add, width=95, text='  Adicionar'.upper(), compound=LEFT,
+                   anchor=NW,
                    overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_inserir.place(x=330, y=10)
 
@@ -213,7 +237,7 @@ app_see = app_see.resize((20, 20))
 app_see = ImageTk.PhotoImage(app_see)
 
 # Criando Button Ver item
-b_see = Button(frameMeio, image=app_see, width=95, text='  Ver item'.upper(), compound=LEFT, anchor=NW,
+b_see = Button(frameMeio, command=ver_imagem, image=app_see, width=95, text='  Ver item'.upper(), compound=LEFT, anchor=NW,
                overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_see.place(x=330, y=218)
 
@@ -253,10 +277,12 @@ b_see.place(x=560, y=165)
 
 # Criando tabela frame baixo
 def mostrar():
+    global tree
+
     tabela_head = ['#Item', 'Nome', 'Sala/Área', 'Descrição', 'Marca/Modelo', 'Data da compra', 'Valor da compra',
                    'Número de série']
 
-    lista_itens = []
+    lista_itens = ver_form()
 
     tree = ttk.Treeview(frameBaixo, selectmode="extended", columns=tabela_head, show="headings")
 
