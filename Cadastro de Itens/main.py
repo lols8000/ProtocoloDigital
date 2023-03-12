@@ -84,6 +84,98 @@ def inserir():
     mostrar()
 
 
+# Função atualizar
+def atualizar():
+    global imagem, imagem_string, l_imagem
+
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        treev_lista = treev_dicionario['values']
+
+        valor = treev_lista[0]
+
+        e_nome.delete(0, 'end')
+        e_local.delete(0, 'end')
+        e_descricao.delete(0, 'end')
+        e_modelo.delete(0, 'end')
+        e_cal.delete(0, 'end')
+        e_valor.delete(0, 'end')
+        e_serial.delete(0, 'end')
+
+        id = int(treev_lista[0])
+        e_nome.insert(0, treev_lista[1])
+        e_local.insert(0, treev_lista[2])
+        e_descricao.insert(0, treev_lista[3])
+        e_modelo.insert(0, treev_lista[4])
+        e_cal.insert(0, treev_lista[5])
+        e_valor.insert(0, treev_lista[6])
+        e_serial.insert(0, treev_lista[7])
+        imagem_string = treev_lista[8]
+
+        def update():
+            global imagem, imagem_string, l_imagem
+
+            nome = e_nome.get()
+            local = e_local.get()
+            descricao = e_descricao.get()
+            modelo = e_modelo.get()
+            data = e_cal.get()
+            valor = e_valor.get()
+            serie = e_serial.get()
+            imagem = imagem_string
+
+            if imagem == '':
+                imagem = e_serial.insert(0, treev_lista[7])
+
+            lista_atualizar = [nome, local, descricao, modelo, data, valor, serie, imagem, id]
+
+            for i in lista_atualizar:
+                if i == '':
+                    messagebox.showerror('Erro', 'Preencha todos os campos')
+                    return
+
+            atualizar_form(lista_atualizar)
+            messagebox.showinfo('Sucesso', 'Os dados foram atualizados com sucesso')
+
+            e_nome.delete(0, 'end')
+            e_local.delete(0, 'end')
+            e_descricao.delete(0, 'end')
+            e_modelo.delete(0, 'end')
+            e_cal.delete(0, 'end')
+            e_valor.delete(0, 'end')
+            e_serial.delete(0, 'end')
+
+            b_confirmar.destroy()
+            mostrar()
+
+        # Criando Button Atualizar
+        b_confirmar = Button(frameMeio, command=update, width=13, text=' Confirmar '.upper(), overrelief=RIDGE,
+                             font=('Ivy 8 bold'), bg=co2, fg=co1)
+        b_confirmar.place(x=330, y=185)
+
+    except IndexError:
+        messagebox.showerror('Erro', 'Selecione um dos tados na tabela')
+
+
+# Função Deletar
+def deletar():
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        treev_lista = treev_dicionario['values']
+        valor = treev_lista[0]
+
+        delelar_form([valor])
+
+        messagebox.showinfo('Sucesso', 'Os dados foram deletados com sucesso')
+
+        mostrar()
+
+    except IndexError:
+        messagebox.showerror('Erro', 'Selecione um dos tados na tabela')
+
+
 # Função para escolher imagem
 def escolher_imagem():
     global imagem, imagem_string, l_imagem
@@ -98,13 +190,13 @@ def escolher_imagem():
     l_imagem = Label(frameMeio, image=imagem)
     l_imagem.place(x=700, y=10)
 
-#Função ver item
+
+# Função ver item
 def ver_imagem():
     global imagem, imagem_string, l_imagem
 
     treev_dados = tree.focus()
     treev_dicionario = tree.item(treev_dados)
-
     treev_lista = treev_dicionario['values']
 
     valor = [int(treev_lista[0])]
@@ -120,9 +212,6 @@ def ver_imagem():
 
     l_imagem = Label(frameMeio, image=imagem)
     l_imagem.place(x=700, y=10)
-
-
-
 
 
 # Trabalhando no frame cima
@@ -194,6 +283,7 @@ e_serial.place(x=130, y=191)
 # Label Imagem do item
 l_carregar = Label(frameMeio, text='Imagem do item', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4)
 l_carregar.place(x=10, y=220)
+
 # Criando Button Carregar
 b_carregar = Button(frameMeio, command=escolher_imagem, width=30, text='carregar'.upper(), compound=CENTER,
                     anchor=CENTER, overrelief=RIDGE,
@@ -217,7 +307,8 @@ app_att = app_att.resize((20, 20))
 app_att = ImageTk.PhotoImage(app_att)
 
 # Criando Button Atualizar
-b_att = Button(frameMeio, image=app_att, width=95, text='  Atualizar'.upper(), compound=LEFT, anchor=NW,
+b_att = Button(frameMeio, command=atualizar, image=app_att, width=95, text='  Atualizar'.upper(), compound=LEFT,
+               anchor=NW,
                overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_att.place(x=330, y=45)
 
@@ -227,7 +318,7 @@ app_del = app_del.resize((20, 20))
 app_del = ImageTk.PhotoImage(app_del)
 
 # Criando Button Excluir
-b_del = Button(frameMeio, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW, overrelief=RIDGE,
+b_del = Button(frameMeio, command=deletar, image=app_del, width=95, text='  Excluir'.upper(), compound=LEFT, anchor=NW, overrelief=RIDGE,
                font=('Ivy 8'), bg=co1, fg=co0)
 b_del.place(x=330, y=80)
 
@@ -237,7 +328,8 @@ app_see = app_see.resize((20, 20))
 app_see = ImageTk.PhotoImage(app_see)
 
 # Criando Button Ver item
-b_see = Button(frameMeio, command=ver_imagem, image=app_see, width=95, text='  Ver item'.upper(), compound=LEFT, anchor=NW,
+b_see = Button(frameMeio, command=ver_imagem, image=app_see, width=95, text='  Ver item'.upper(), compound=LEFT,
+               anchor=NW,
                overrelief=RIDGE, font=('Ivy 8'), bg=co1, fg=co0)
 b_see.place(x=330, y=218)
 
