@@ -66,4 +66,4 @@ def menuInicial():
 
     janela.mainloop()
 
-# menuInicial()
+menuInicial()
